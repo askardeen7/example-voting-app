@@ -1,0 +1,22 @@
+Multi-architecture builds using buildx plugin steps:
+
+mkdir -p ~/.docker/cli-plugins/
+
+curl -L https://github.com/docker/buildx/releases/download/v0.17.1/buildx-v0.17.1.linux-amd64 \
+  -o ~/.docker/cli-plugins/docker-buildx
+  
+chmod +x ~/.docker/cli-plugins/docker-buildx
+
+ls -lh ~/.docker/cli-plugins/
+docker buildx version
+
+docker buildx create --name multiarch --use
+docker buildx inspect multiarch --bootstrap
+
+docker buildx ls
+
+az acr login --name askaaracr
+
+docker buildx build --platform linux/arm64 -t askaaracr.azurecr.io/voteapp:v3 . --push
+
+kubectl port-forward svc/vote 8080:8080 --address=0.0.0.0
